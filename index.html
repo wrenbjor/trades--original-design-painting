@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Original Design Painting | Painting in Blackwood, NJ</title>
+<meta name="description" content="Painting Contractor in Blackwood, NJ. We do complete painting for home and business, decorating, coordinating, consultation, interior and exterior, residential ">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --p:#9F1239;--pd:#720c29;
+  --bg:#141420;--bg2:#1c1c2e;--bg3:#0e0e1a;
+  --w:#ffffff;--muted:#9ca3af;--light:#e2e8f0;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--w);overflow-x:hidden}
+
+/* ── NAV ── */
+nav{
+  position:fixed;inset:0 0 auto 0;z-index:999;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.9rem 2rem;
+  background:rgba(14,14,26,.92);backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.nbrand{font-size:1rem;font-weight:800;color:var(--w);text-decoration:none;letter-spacing:-.02em}
+.nbrand span{color:var(--p)}
+.nphone{
+  display:inline-flex;align-items:center;gap:.45rem;
+  background:var(--p);color:#fff;text-decoration:none;
+  padding:.5rem 1.2rem;border-radius:5px;font-weight:700;font-size:.875rem;
+  transition:background .25s,transform .25s;
+}
+.nphone:hover{background:var(--pd);transform:translateY(-1px)}
+
+/* ── HERO ── */
+.hero{
+  min-height:100vh;
+  background:linear-gradient(140deg,var(--bg3) 0%,var(--bg2) 55%,#1e1e35 100%);
+  display:flex;align-items:center;
+  position:relative;overflow:hidden;
+  padding:7rem 2rem 9rem;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(
+    -48deg,
+    transparent,transparent 60px,
+    rgba(255,255,255,.018) 60px,rgba(255,255,255,.018) 61px
+  );
+}
+.hero-accent{
+  position:absolute;top:0;right:0;width:45%;height:100%;
+  background:linear-gradient(135deg,transparent 30%,rgba(159,18,57,.12) 100%);
+  clip-path:polygon(25% 0,100% 0,100% 100%,0 100%);
+}
+/* diagonal bottom divider */
+.hero::after{
+  content:'';position:absolute;bottom:-1px;left:0;right:0;height:100px;
+  background:var(--bg);
+  clip-path:polygon(0 55%,100% 0,100% 100%,0 100%);
+}
+.hero-wrap{position:relative;z-index:2;max-width:1100px;margin:0 auto;width:100%}
+.badge{
+  display:inline-flex;align-items:center;gap:.45rem;
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);
+  padding:.35rem .9rem;border-radius:100px;
+  font-size:.72rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--p);margin-bottom:1.4rem;
+}
+.hero h1{
+  font-size:clamp(2.4rem,6vw,5rem);font-weight:900;
+  line-height:1.04;letter-spacing:-.035em;margin-bottom:.9rem;
+}
+.hero h1 em{color:var(--p);font-style:normal}
+.hero-sub{
+  font-size:clamp(.95rem,2vw,1.2rem);color:var(--muted);
+  max-width:580px;line-height:1.65;margin-bottom:2.4rem;
+}
+.ctas{display:flex;gap:1rem;flex-wrap:wrap;align-items:center}
+.btn-main{
+  display:inline-flex;align-items:center;gap:.55rem;
+  background:var(--p);color:#fff;text-decoration:none;
+  padding:.95rem 2rem;border-radius:6px;font-weight:700;font-size:1rem;
+  box-shadow:0 4px 22px rgba(0,0,0,.35);
+  transition:background .25s,transform .25s,box-shadow .25s;
+}
+.btn-main:hover{background:var(--pd);transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,0,0,.45)}
+.btn-ghost{
+  display:inline-flex;align-items:center;gap:.55rem;
+  background:transparent;color:var(--w);text-decoration:none;
+  padding:.95rem 2rem;border-radius:6px;font-weight:600;font-size:1rem;
+  border:2px solid rgba(255,255,255,.18);
+  transition:border-color .25s,color .25s;
+}
+.btn-ghost:hover{border-color:var(--p);color:var(--p)}
+.hero-stats{
+  display:flex;gap:2.5rem;flex-wrap:wrap;
+  margin-top:2.8rem;padding-top:2rem;
+  border-top:1px solid rgba(255,255,255,.08);
+}
+.stat-num{font-size:2rem;font-weight:800;color:var(--p);line-height:1}
+.stat-lbl{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-top:.2rem}
+
+/* ── SERVICES ── */
+.services{background:var(--bg);padding:5.5rem 2rem 6rem}
+.sec-hdr{text-align:center;margin-bottom:3.2rem}
+.sec-label{
+  display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--p);margin-bottom:.6rem;
+}
+.sec-hdr h2{font-size:clamp(1.7rem,4vw,2.8rem);font-weight:800;letter-spacing:-.025em}
+.sec-hdr p{color:var(--muted);font-size:1rem;max-width:520px;margin:.65rem auto 0;line-height:1.6}
+.svc-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));
+  gap:1.4rem;max-width:1100px;margin:0 auto;
+}
+.svc-card{
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);
+  border-radius:12px;padding:1.9rem;
+  position:relative;overflow:hidden;
+  transition:transform .3s,background .3s,border-color .3s;
+}
+.svc-card::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:3px;
+  background:var(--p);transform:scaleX(0);transform-origin:left;
+  transition:transform .35s;
+}
+.svc-card:hover{transform:translateY(-5px);background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.12)}
+.svc-card:hover::after{transform:scaleX(1)}
+.svc-ico{
+  width:46px;height:46px;border-radius:10px;
+  background:rgba(255,255,255,.06);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.15rem;color:var(--p);margin-bottom:1.1rem;
+}
+.svc-card h3{font-size:1rem;font-weight:600;line-height:1.4}
+
+/* ── ABOUT ── */
+.about{
+  background:var(--bg2);padding:7rem 2rem 6rem;
+  position:relative;overflow:hidden;
+}
+.about::before{
+  content:'';position:absolute;top:-1px;left:0;right:0;height:80px;
+  background:var(--bg);
+  clip-path:polygon(0 0,100% 0,100% 30%,0 100%);
+}
+.about-inner{
+  max-width:1100px;margin:0 auto;
+  display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;
+}
+.about-copy .sec-label{display:block;margin-bottom:.5rem}
+.about-copy h2{font-size:clamp(1.7rem,3.5vw,2.7rem);font-weight:800;letter-spacing:-.025em;margin-bottom:1.4rem}
+.about-copy p{color:var(--muted);line-height:1.8;font-size:.975rem;margin-bottom:1.4rem}
+.checks{display:flex;flex-direction:column;gap:.65rem;margin-top:.5rem}
+.check{display:flex;align-items:center;gap:.7rem;font-size:.93rem;color:var(--light)}
+.check i{color:var(--p);font-size:.95rem;flex-shrink:0}
+.about-card{
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);
+  border-radius:16px;padding:2.5rem;text-align:center;
+}
+.about-card .big-ico{font-size:4.5rem;color:var(--p);display:block;margin-bottom:1.3rem}
+.about-card h3{font-size:1.3rem;font-weight:700;margin-bottom:.7rem}
+.about-card p{color:var(--muted);font-size:.9rem;line-height:1.6;margin-bottom:1.6rem}
+
+/* ── TESTIMONIALS ── */
+.testimonials{background:var(--bg);padding:5.5rem 2rem}
+.t-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));
+  gap:1.4rem;max-width:1100px;margin:0 auto;
+}
+.tcard{
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);
+  border-radius:12px;padding:2rem;
+  transition:transform .3s,border-color .3s;
+}
+.tcard:hover{transform:translateY(-4px);border-color:rgba(255,255,255,.13)}
+.stars{color:#f59e0b;letter-spacing:2px;margin-bottom:.9rem;font-size:1rem}
+.tcard p{color:var(--light);line-height:1.7;font-size:.93rem;font-style:italic;margin-bottom:.9rem}
+.rev-name{font-size:.8rem;color:var(--p);font-weight:600}
+
+/* ── CTA BAND ── */
+.cta-band{
+  background:var(--p);padding:5rem 2rem;text-align:center;
+  position:relative;overflow:hidden;
+}
+.cta-band::before{
+  content:'';position:absolute;top:-1px;left:0;right:0;height:80px;
+  background:var(--bg);
+  clip-path:polygon(0 0,100% 0,100% 100%,0 30%);
+}
+.cta-inner{position:relative;z-index:1}
+.cta-band h2{font-size:clamp(1.9rem,5vw,3.2rem);font-weight:900;letter-spacing:-.03em;margin-bottom:.9rem}
+.cta-band p{font-size:1.1rem;opacity:.9;max-width:480px;margin:0 auto 2.4rem;line-height:1.6}
+.btn-cta{
+  display:inline-flex;align-items:center;gap:.7rem;
+  background:#fff;color:var(--p);text-decoration:none;
+  padding:1.1rem 2.6rem;border-radius:6px;font-weight:800;font-size:1.1rem;
+  box-shadow:0 4px 20px rgba(0,0,0,.2);
+  transition:transform .25s,box-shadow .25s;
+}
+.btn-cta:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,.3)}
+
+/* ── FOOTER ── */
+footer{background:#0a0a14;padding:2.2rem 2rem;text-align:center;border-top:1px solid rgba(255,255,255,.05)}
+footer p{color:var(--muted);font-size:.82rem}
+footer a{color:var(--p);text-decoration:none}
+footer a:hover{text-decoration:underline}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+.hero-wrap>*{animation:fadeUp .6s ease both}
+.hero-wrap>*:nth-child(1){animation-delay:.1s}
+.hero-wrap>*:nth-child(2){animation-delay:.2s}
+.hero-wrap>*:nth-child(3){animation-delay:.3s}
+.hero-wrap>*:nth-child(4){animation-delay:.4s}
+.hero-wrap>*:nth-child(5){animation-delay:.5s}
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px){
+  .about-inner{grid-template-columns:1fr;gap:2.5rem}
+  .ctas{flex-direction:column;align-items:flex-start}
+  .hero-stats{gap:1.5rem}
+}
+@media(max-width:480px){
+  nav{padding:.75rem 1rem}
+  .nbrand{font-size:.85rem}
+  .svc-grid{grid-template-columns:1fr}
+  .t-grid{grid-template-columns:1fr}
+}
+/* ── MAP ── */
+.map-section{background:#0a0a14}
+#map{width:100%;height:400px;display:block}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nbrand" href="#"><span>Original Design Painting</span></a>
+  <a class="nphone" href="tel:8564010101"><i class="fas fa-phone"></i>(856) 401-0101</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-accent"></div>
+  <div class="hero-wrap">
+    <div class="badge"><i class="fas fa-paint-roller"></i>&nbsp;Painting &mdash; Blackwood, NJ</div>
+    <h1>Original Design Painting<br><em>Painting Experts</em></h1>
+    <p class="hero-sub">Painting Contractor in Blackwood, NJ. We do complete painting for home and business, decorating, coordinating, consultation, interior and exterior, residential and commercial industrial painting, pain</p>
+    <div class="ctas">
+      <a class="btn-main" href="tel:8564010101"><i class="fas fa-phone"></i>Call Now: (856) 401-0101</a>
+      <a class="btn-ghost" href="#services"><i class="fas fa-chevron-down"></i>Our Services</a>
+    </div>
+    <div class="hero-stats">
+      <div><div class="stat-num">100%</div><div class="stat-lbl">Satisfaction</div></div>
+      <div><div class="stat-num">24/7</div><div class="stat-lbl">Available</div></div>
+      <div><div class="stat-num">Free</div><div class="stat-lbl">Estimates</div></div>
+      <div><div class="stat-num">Local</div><div class="stat-lbl">Experts</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="services" id="services">
+  <div class="sec-hdr">
+    <span class="sec-label">What We Do</span>
+    <h2>Our Painting Services</h2>
+    <p>Expert solutions for residential &amp; commercial properties across Blackwood and the surrounding area.</p>
+  </div>
+  <div class="svc-grid">
+        <div class="svc-card">
+          <div class="svc-ico"><i class="fas fa-check-circle"></i></div>
+          <h3>About Us</h3>
+        </div>
+        <div class="svc-card">
+          <div class="svc-ico"><i class="fas fa-star"></i></div>
+          <h3>Financing</h3>
+        </div>
+        <div class="svc-card">
+          <div class="svc-ico"><i class="fas fa-shield-alt"></i></div>
+          <h3>Free Estimate</h3>
+        </div>
+        <div class="svc-card">
+          <div class="svc-ico"><i class="fas fa-award"></i></div>
+          <h3>Rating:</h3>
+        </div>
+        <div class="svc-card">
+          <div class="svc-ico"><i class="fas fa-hard-hat"></i></div>
+          <h3>Rating:</h3>
+        </div>
+        <div class="svc-card">
+          <div class="svc-ico"><i class="fas fa-thumbs-up"></i></div>
+          <h3>Rating:</h3>
+        </div></div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="about-inner">
+    <div class="about-copy">
+      <span class="sec-label">About Us</span>
+      <h2>Your Trusted Local<br>Painting Contractor</h2>
+      <p>At Original Design Painting, we specialize in delivering top-tier residential and commercial painting services throughout South Jersey. Our licensed and insured team combines expert craftsmanship with personalized service to transform homes and businesses inside and out. Whether you&#39;re updating your living space or giving your property a fresh exterior look, we’re here to bring your vision to life.</p>
+      <div class="checks">
+        <div class="check"><i class="fas fa-check-circle"></i>Licensed &amp; Fully Insured</div>
+        <div class="check"><i class="fas fa-check-circle"></i>Free Written Estimates</div>
+        <div class="check"><i class="fas fa-check-circle"></i>Serving Blackwood &amp; Surrounding Areas</div>
+        <div class="check"><i class="fas fa-check-circle"></i>100% Satisfaction Guaranteed</div>
+      </div>
+    </div>
+    <div class="about-card">
+      <i class="fas fa-paint-roller big-ico"></i>
+      <h3>Painting Specialists</h3>
+      <p>Quality workmanship, fair pricing, and superior service. Serving Blackwood, NJ with pride.</p>
+      <a class="btn-main" href="tel:8564010101" style="justify-content:center">
+        <i class="fas fa-phone"></i>(856) 401-0101
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials" id="reviews">
+  <div class="sec-hdr">
+    <span class="sec-label">Reviews</span>
+    <h2>What Our Customers Say</h2>
+    <p>Real feedback from homeowners and businesses in Blackwood who trust us for their painting needs.</p>
+  </div>
+  <div class="t-grid">
+        <div class="tcard">
+          <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <p>&ldquo;Amazing service from start to finish. Professional, on time, and did an outstanding job. I couldn&#39;t be happier with the results and will definitely use them again.&rdquo;</p>
+          <span class="rev-name">— Verified Customer</span>
+        </div>
+        <div class="tcard">
+          <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <p>&ldquo;Best decision I made was calling this company. Fair pricing, great communication, and the quality of work exceeded my expectations. Highly recommend!&rdquo;</p>
+          <span class="rev-name">— Verified Customer</span>
+        </div>
+        <div class="tcard">
+          <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <p>&ldquo;Outstanding crew — knowledgeable, friendly, and they left everything spotless. Completed the job exactly as promised. Five stars without hesitation.&rdquo;</p>
+          <span class="rev-name">— Verified Customer</span>
+        </div></div>
+</section>
+
+<!-- CTA BAND -->
+<section class="cta-band" id="contact">
+  <div class="cta-inner">
+    <h2>Ready to Get Started?</h2>
+    <p>Contact Original Design Painting today for a free, no-obligation estimate on your painting project.</p>
+    <a class="btn-cta" href="tel:8564010101"><i class="fas fa-phone-alt"></i>Call (856) 401-0101</a>
+  </div>
+</section>
+
+<!-- MAP -->
+<section class="map-section">
+  <div id="map" aria-label="Map showing Original Design Painting in Blackwood, NJ"></div>
+</section>
+
+<footer>
+  <p>&copy; 2025 Original Design Painting &nbsp;&bull;&nbsp; Painting in Blackwood, NJ &nbsp;&bull;&nbsp; <a href="tel:8564010101">(856) 401-0101</a></p>
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+(function(){
+  var geo='622 Geneva Ave, Blackwood, NJ';
+  if(!geo)return;
+  var q=encodeURIComponent(geo+', USA');
+  fetch('https://nominatim.openstreetmap.org/search?q='+q+'&format=json&limit=1')
+    .then(function(r){return r.json();})
+    .then(function(d){
+      if(!d||!d.length)return;
+      var lat=parseFloat(d[0].lat),lng=parseFloat(d[0].lon);
+      var map=L.map('map',{scrollWheelZoom:false}).setView([lat,lng],13);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+        attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        maxZoom:19
+      }).addTo(map);
+      L.marker([lat,lng]).addTo(map).bindPopup('Original Design Painting').openPopup();
+    }).catch(function(){});
+})();
+</script>
+
+</body>
+</html>
